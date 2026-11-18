@@ -1,4 +1,4 @@
-# Sample Size and Economic Analysis for RWE Observational Studies (v4.1)
+# Sample Size and Economic Analysis for RWE Observational Studies
 
 ## 1. Purpose and expected source-file inputs
 
