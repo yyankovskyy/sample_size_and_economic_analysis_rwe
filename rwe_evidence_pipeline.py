@@ -1459,6 +1459,30 @@ def generate_word_report(output_dir, source=None):
     return path
 
 
+
+def is_verified_legacy_demo_duplicate(legacy_path: Path, synthetic_path: Path) -> bool:
+    """Remove only byte-identical synthetic copies left by older make-demo.
+
+    A user's real/study-specific canonical file must never be deleted, even
+    when make-demo is rerun with a different seed or n. If verification is
+    impossible, retain the file and tell the user why there are >2 CSVs.
+    """
+    import filecmp
+
+    if (legacy_path.is_symlink() or synthetic_path.is_symlink()
+            or not legacy_path.is_file() or not synthetic_path.is_file()):
+        return False
+    if not filecmp.cmp(legacy_path, synthetic_path, shallow=False):
+        return False
+    try:
+        patient_ids = pd.read_csv(legacy_path, usecols=["patient_id"],
+                                  dtype={"patient_id": "string"})["patient_id"]
+        return bool(len(patient_ids) and patient_ids.notna().all()
+                    and patient_ids.str.startswith("SYNTHETIC_").all())
+    except (ValueError, OSError, pd.errors.ParserError):
+        return False
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     sub = p.add_subparsers(dest="command", required=True)
@@ -1520,19 +1544,24 @@ def main():
         dest = Path(args.output_dir)
         dest.mkdir(parents=True, exist_ok=True)
         for i, source in enumerate(("EpicCosmos", "NARCOMS")):
-            sample = demo(args.n, args.seed + i, source)
             synthetic_path = dest / f"SYNTHETIC_{source}_cohort.csv"
+            legacy_path = dest / f"{source}_cohort.csv"
+
+            # Previous versions created TWO identical CSVs per source. Remove
+            # only a proven synthetic duplicate, BEFORE regenerating the demo
+            # (which may be requested with a different seed). Never remove a
+            # canonical file containing different data or a symbolic link.
+            if legacy_path.exists() or legacy_path.is_symlink():
+                if is_verified_legacy_demo_duplicate(legacy_path, synthetic_path):
+                    legacy_path.unlink()
+                    print(f"Removed verified duplicate synthetic placeholder: {legacy_path.resolve()}")
+                else:
+                    print(f"Preserved distinct input (not modified): {legacy_path.resolve()}")
+
+            sample = demo(args.n, args.seed + i, source)
             sample.to_csv(synthetic_path, index=False)
-            print(f"Synthetic demonstration data: {synthetic_path.resolve()}")
-            # Provide a predictable, replaceable application input path.
-            # NEVER overwrite a pre-existing canonical path: it may hold a
-            # user's study-specific, authorized normalized cohort.
-            canonical_path = dest / f"{source}_cohort.csv"
-            if canonical_path.exists():
-                print(f"Preserved existing input file (not overwritten): {canonical_path.resolve()}")
-            else:
-                sample.to_csv(canonical_path, index=False)
-                print(f"Created synthetic placeholder (not native source data): {canonical_path.resolve()}")
+            print(f"Generated synthetic {source} cohort: {synthetic_path.resolve()}")
+        print("Demo generation complete: one generated CSV per source (two total).")
         return
     if args.bootstrap < 20:
         raise SystemExit("At least 20 bootstrap replicates are required (>=500 preferred)")
