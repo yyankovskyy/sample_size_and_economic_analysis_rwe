@@ -1,0 +1,47 @@
+{
+  "sample_n": 450,
+  "treated_n": 246,
+  "control_n": 204,
+  "treatment_fraction": 0.5466666666666666,
+  "estimand": "ATO",
+  "horizon_days": 365,
+  "phi_bhattacharyya": 0.9327894747166595,
+  "ps_min": 0.12651529779586962,
+  "ps_p01": 0.18164858196848002,
+  "ps_median": 0.5481149979819424,
+  "ps_p99": 0.867614966545597,
+  "ps_max": 0.9054230009061408,
+  "ps_near_extreme_n": 0,
+  "weighted_ess_treated": 210.5033850971502,
+  "weighted_ess_control": 182.65872896728186,
+  "max_abs_smd_before": 0.5170961697728116,
+  "max_abs_smd_after": 0.005243162172219125,
+  "n_abs_smd_gt_0_1_after": 0,
+  "complete_365d_n": 386,
+  "source": "EpicCosmos",
+  "dataset_filename": "SYNTHETIC_EpicCosmos_cohort.csv",
+  "data_origin": "synthetic_demo",
+  "bootstrap_replicates_requested": 1000,
+  "ps_predictions_clipped_n": 0,
+  "missingness_fraction": {
+    "clinical_response_365d": 0.14222222222222222,
+    "hospitalizations_365d": 0.14222222222222222,
+    "ed_visits_365d": 0.14222222222222222,
+    "hospital_days_365d": 0.14222222222222222,
+    "cost_365d_usd": 0.14222222222222222,
+    "qaly_365d": 0.14222222222222222
+  },
+  "bootstrap_fit_failures": 0,
+  "warnings_and_limitations": [
+    "All results are exploratory until cohort/exposure/outcome algorithms are validated",
+    "Index dates are syntax-checked only; confirm every exposure, confounder and outcome time window upstream",
+    "Patient bootstrap is not site-cluster robust; use cluster-aware bootstrap for multisite inference",
+    "Complete-case 365-day outcomes assume follow-up availability is ignorable; consider IPCW",
+    "KM safety risk assumes independent censoring and no competing-risk complication"
+  ],
+  "dependencies": {
+    "python": "3.11.13",
+    "pandas": "2.3.3",
+    "numpy": "1.26.4"
+  }
+}

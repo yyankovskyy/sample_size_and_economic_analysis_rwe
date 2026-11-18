@@ -1,0 +1,3 @@
+group,patients,full_365d_followup,baseline_mean_age,adverse_events,median_followup_days
+control,204,174,56.32303921568628,25,365.0
+treated,246,212,62.43821138211382,20,365.0

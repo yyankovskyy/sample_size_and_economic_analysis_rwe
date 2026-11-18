@@ -1,0 +1,14 @@
+variable,missing_n,missing_fraction
+treated,0,0.0
+age,0,0.0
+sex,0,0.0
+baseline_severity,0,0.0
+comorbidity_index,0,0.0
+prior_hospitalizations_365d,0,0.0
+followup_days,0,0.0
+safety_event,0,0.0
+safety_time_days,0,0.0
+clinical_response_365d,67,0.14888888888888888
+hospitalizations_365d,67,0.14888888888888888
+ed_visits_365d,67,0.14888888888888888
+hospital_days_365d,67,0.14888888888888888

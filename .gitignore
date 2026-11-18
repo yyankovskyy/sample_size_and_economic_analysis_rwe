@@ -6,28 +6,53 @@
 .venv/
 venv/
 __pycache__/
+*.pyc
 .pytest_cache/
 .ipynb_checkpoints/
 .DS_Store
-*.pyc
 
-# Canonical input names may be replaced with restricted patient data.
-demo_data/EpicCosmos_cohort.csv
-demo_data/NARCOMS_cohort.csv
-
-# Keep only explicitly synthetic CSVs if publishing to public GitHub.
+# Data formats and folders never published by default.
 *.csv
-!demo_data/SYNTHETIC_EpicCosmos_cohort.csv
-!demo_data/SYNTHETIC_NARCOMS_cohort.csv
-
-# Generated results can contain sensitive or disclosive summary cells.
-outputs/
+*.parquet
+*.sqlite
+*.db
 results/
 raw_data/
 private_data/
 restricted_data/
 real_data/
-*.parquet
-*.sqlite
-*.db
-.DS_Store
+
+# demo_data/: publish ONLY the two synthetic cohorts.
+demo_data/*
+!demo_data/SYNTHETIC_EpicCosmos_cohort.csv
+!demo_data/SYNTHETIC_NARCOMS_cohort.csv
+
+# outputs/: generated results can contain disclosive summary cells.
+# Publish ONLY the results produced from the synthetic cohorts.
+outputs/*
+!outputs/EpicCosmos/
+!outputs/NARCOMS/
+outputs/EpicCosmos/*
+outputs/NARCOMS/*
+
+!outputs/EpicCosmos/cohort_summary.csv
+!outputs/EpicCosmos/covariate_balance.csv
+!outputs/EpicCosmos/covariate_balance.png
+!outputs/EpicCosmos/diagnostics.json
+!outputs/EpicCosmos/effect_estimates.csv
+!outputs/EpicCosmos/EpicCosmos_RWE_Evidence_Report.docx
+!outputs/EpicCosmos/evidence_summary.md
+!outputs/EpicCosmos/missingness.csv
+!outputs/EpicCosmos/propensity_overlap.png
+!outputs/EpicCosmos/table1_baseline.csv
+
+!outputs/NARCOMS/cohort_summary.csv
+!outputs/NARCOMS/covariate_balance.csv
+!outputs/NARCOMS/covariate_balance.png
+!outputs/NARCOMS/diagnostics.json
+!outputs/NARCOMS/effect_estimates.csv
+!outputs/NARCOMS/NARCOMS_RWE_Evidence_Report.docx
+!outputs/NARCOMS/evidence_summary.md
+!outputs/NARCOMS/missingness.csv
+!outputs/NARCOMS/propensity_overlap.png
+!outputs/NARCOMS/table1_baseline.csv

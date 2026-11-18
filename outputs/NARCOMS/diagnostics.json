@@ -1,0 +1,45 @@
+{
+  "sample_n": 450,
+  "treated_n": 197,
+  "control_n": 253,
+  "treatment_fraction": 0.43777777777777777,
+  "estimand": "ATO",
+  "horizon_days": 365,
+  "phi_bhattacharyya": 0.9098801309359842,
+  "ps_min": 0.04607828790751258,
+  "ps_p01": 0.08375506254210885,
+  "ps_median": 0.41922082978151476,
+  "ps_p99": 0.8885121311190509,
+  "ps_max": 0.9534022852826675,
+  "ps_near_extreme_n": 0,
+  "weighted_ess_treated": 171.03534313014933,
+  "weighted_ess_control": 204.39175357863462,
+  "max_abs_smd_before": 0.6301784506497751,
+  "max_abs_smd_after": 0.007002465960742721,
+  "n_abs_smd_gt_0_1_after": 0,
+  "complete_365d_n": 383,
+  "source": "NARCOMS",
+  "dataset_filename": "SYNTHETIC_NARCOMS_cohort.csv",
+  "data_origin": "synthetic_demo",
+  "bootstrap_replicates_requested": 1000,
+  "ps_predictions_clipped_n": 0,
+  "missingness_fraction": {
+    "clinical_response_365d": 0.14888888888888888,
+    "hospitalizations_365d": 0.14888888888888888,
+    "ed_visits_365d": 0.14888888888888888,
+    "hospital_days_365d": 0.14888888888888888
+  },
+  "bootstrap_fit_failures": 0,
+  "warnings_and_limitations": [
+    "All results are exploratory until cohort/exposure/outcome algorithms are validated",
+    "Index dates are syntax-checked only; confirm every exposure, confounder and outcome time window upstream",
+    "Patient bootstrap is not site-cluster robust; use cluster-aware bootstrap for multisite inference",
+    "Complete-case 365-day outcomes assume follow-up availability is ignorable; consider IPCW",
+    "KM safety risk assumes independent censoring and no competing-risk complication"
+  ],
+  "dependencies": {
+    "python": "3.11.13",
+    "pandas": "2.3.3",
+    "numpy": "1.26.4"
+  }
+}
