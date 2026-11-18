@@ -1,4 +1,4 @@
-# Sample Size and Economic Analysis for RWE Observational Studies
+# Sample Size and Economic Analysis for RWE Observational Studies (v4.1)
 
 ## 1. Purpose and expected source-file inputs
 
@@ -24,6 +24,25 @@ Every `analyze` run writes Markdown, a source-specific **Word (`.docx`)** report
 1. **`analyze` — observational RWE outcome analysis.** Fits a propensity-score (PS) model, applies ATE, ATT or ATO weights, evaluates confounder balance/overlap, and estimates safety, comparative effectiveness, resource use and optional health-economic results. **The output of `analyze` alone is NOT a prospective sample-size calculation.**
 2. **`plan-sample-size` — exploratory sample-size planning from an eligible pilot cohort.** Uses a bootstrap standard error obtained from `analyze`, a researcher-specified **clinically meaningful target difference**, test alpha, power, optional additional attrition beyond that already seen in the pilot, and an explicit sensitivity variance multiplier. It produces `sample_size_plan.csv`/`.md` and adds a section to the Word report. It assumes the same study design, propensity-score overlap, measured covariates and follow-up conditions as the pilot. **This is not the Liu–Yang–Li / PSpower analytical method.** For design-stage variation in the overlap and separate confounding coefficient (rho-squared), use the validated R package [PSpower](https://cran.r-project.org/web/packages/PSpower/index.html) and/or a prespecified clinical simulation study.
 
+The application name describes the intended research workflow; it must not be taken as a claim that all RWE analyses automatically compute required N, or that the pilot approximation replaces formal clinical sample-size justification.
+
+**Data governance:** Epic's current Cosmos governance prohibits line-level data leaving the Cosmos secure portal; at institutions including Stanford and UC Davis, patient-level export is disallowed. Run the pipeline in the authorized research environment when required. NARCOMS extracts must follow the applicable research agreement, IRB and disclosure requirements. Never copy restricted patient-level data into a personal or publicly shared `demo_data` directory.
+
+
+### Unique output measures and interpretation
+
+Earlier releases printed the generic `measure=weighted_mean_difference` for admissions, ED visits, inpatient days and costs, which was statistically correct as an **estimator type** but ambiguous without the `outcome` column. Version 4.1 outputs a **distinct `measure` identifier and `metric_code` for each outcome/statistic**, and a separate `statistic` field to retain the estimator family. The terminal shows `domain`, `outcome`, `measure`, `effect`, `ci_low`, and `ci_high`. `measure` is unique within the results from a single analysis, including economic willingness-to-pay scenarios.
+
+Economic indicators **were independently recalculated**: for patients jointly observed with valid costs and benefits, `incremental cost-effectiveness ratio (ICER) = (cost_treated - cost_control) / (benefit_treated - benefit_control)`. A negative ratio with lower cost and improved health is a *dominance* situation, **not** a negative per-unit price. Separate treated/control ICER values do not exist. **Incremental net monetary benefit (INMB)** is the difference between arm-specific monetary net benefits: `NMB_t = WTP * benefit_t - cost_t` and `NMB_c = WTP * benefit_c - cost_c`, so `INMB = NMB_t - NMB_c`. Version 4.1 fills both arm columns in INMB rows. These estimates are descriptive unless costs, quality-adjusted life years (QALYs), and causal assumptions are validated.
+
+**Display precision:** numeric estimates, diagnostic summaries and 95% confidence limits in Word, Markdown and terminal are shown to **three decimal places**. This does not change the underlying calculation precision in `effect_estimates.csv`, `cohort_summary.csv`, `diagnostics.json`, or the planning output.
+
+### Explanatory notes in Word reports
+
+- **Section 1:** Bhattacharyya propensity-score overlap coefficient phi ranges theoretically from 0 (disjoint treatment-score distributions/no overlap) to 1 (identical distributions/full overlap). High overlap supports—but does not prove—population comparability. Coefficient estimated from fitted propensity scores and treatment fraction.
+- **Section 5:** raw ('Unadjusted') standardized mean differences (SMDs) compare group means/proportions before weighting. 'Weighted' SMDs use propensity-score-derived weighted means and variances. SMD equals `(treated mean - control mean) / pooled standard deviation`, assessed before and after weighting. For **ATO**, treated weight is `1-e(X)` and control weight is `e(X)`. The `|SMD| = 0.100` reference line denotes a widely used balance **heuristic**, not a significance cutoff and not proof of no unmeasured confounding.
+
+References: Austin PC. *Stat Med.* 2009;28:3083-3107, [DOI:10.1002/sim.3697](https://doi.org/10.1002/sim.3697); Li F, Morgan KL, Zaslavsky AM. *JASA* 2018;113:390-400, [DOI:10.1080/01621459.2016.1260466](https://doi.org/10.1080/01621459.2016.1260466); Liu B, Yang C, Li F. *Ann Stat* 2026;54:2191-2208, [DOI:10.1214/26-AOS2649](https://doi.org/10.1214/26-AOS2649).
 
 ## 2. Installation and location of files
 
